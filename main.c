@@ -108,8 +108,8 @@ int handleInput(int input, Player * user)
 
     case 'd':
     case 'D':
-      newX = user->yPosition;
-      newY = user->xPosition + 1;
+      newX = user->xPosition + 1;
+      newY = user->yPosition;
       break;
     
     default:
