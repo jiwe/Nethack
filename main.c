@@ -1,4 +1,4 @@
-#include <ncurses.h>
+#include<ncurses.h>
 #include <stdlib.h>
 
 typedef struct Player
@@ -13,6 +13,7 @@ int mapSetUp();
 Player * playerSetUp();
 int handleInput(int input, Player * user);
 int playerMove(int y, int x, Player * user);
+int checkPostion(int newY, int newX, Player * user);
 
 int main ()
 {
@@ -46,24 +47,24 @@ int screenSetUp()
 int mapSetUp()
 {
   mvprintw(13, 13, "-----------");
-  mvprintw(14, 13, "|-----------|");
-  mvprintw(15, 13, "|-----------|");
-  mvprintw(16, 13, "|-----------|");
-  mvprintw(17, 13, "|-----------|");
+  mvprintw(14, 13, "|..........|");
+  mvprintw(15, 13, "|..........|");
+  mvprintw(16, 13, "|..........|");
+  mvprintw(17, 13, "|..........|");
   mvprintw(18, 13, "-----------");
    
   mvprintw(3, 40, "-----------");
-  mvprintw(4, 40, "|-----------|");
-  mvprintw(5, 40, "|-----------|");
-  mvprintw(6, 40, "|-----------|");
-  mvprintw(7, 40, "|-----------|");
+  mvprintw(4, 40, "|..........|");
+  mvprintw(5, 40, "|..........|");
+  mvprintw(6, 40, "|..........|");
+  mvprintw(7, 40, "|..........|");
   mvprintw(8, 40, "-----------");
   
   mvprintw(13, 40, "-----------");
-  mvprintw(14, 40, "|-----------|");
-  mvprintw(15, 40, "|-----------|");
-  mvprintw(16, 40, "|-----------|");
-  mvprintw(17, 40, "|-----------|");
+  mvprintw(14, 40, "|..........|");
+  mvprintw(15, 40, "|..........|");
+  mvprintw(16, 40, "|..........|");
+  mvprintw(17, 40, "|..........|");
   mvprintw(18, 40, "-----------");
 }
 
@@ -83,31 +84,39 @@ Player * playerSetUp()
 
 int handleInput(int input, Player * user)
 {
+  int newX, newY;
+
   switch (input)
   {
     case 'w':
     case 'W':
-      playerMove(user->yPosition - 1, user->xPosition, user);
+      newX = user->xPosition;
+      newY = user->yPosition - 1;
       break;
 
     case 's':
     case 'S':
-      playerMove(user->yPosition + 1, user->xPosition, user);
+      newX = user->xPosition;
+      newY = user->yPosition + 1;
       break;
 
     case 'a':
     case 'A':
-      playerMove(user->yPosition, user->xPosition - 1, user);
+      newX = user->xPosition - 1;
+      newY = user->yPosition;
       break;
 
     case 'd':
     case 'D':
-      playerMove(user->yPosition, user->xPosition + 1, user);
+      newX = user->yPosition;
+      newY = user->xPosition + 1;
       break;
     
     default:
       break;
   }
+  
+  checkPostion(newY, newX, user);
 }
 
 int playerMove(int y, int x, Player * user)
@@ -117,4 +126,18 @@ int playerMove(int y, int x, Player * user)
   user->yPosition = y;
   mvprintw(user->yPosition, user->xPosition, "@");
   move(user->yPosition, user->xPosition);
+}
+
+int checkPostion(int newY, int newX, Player * user)
+{
+  int space;
+  switch (mvinch(newY, newX))
+  {
+    case '.':
+      playerMove(newY, newX, user);
+      break;
+    default:
+      move(user->yPosition, user->xPosition);
+      break;
+  }
 }
